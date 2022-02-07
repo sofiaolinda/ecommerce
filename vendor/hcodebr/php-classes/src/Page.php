@@ -6,7 +6,6 @@ use Rain\Tpl;
 
 class Page
 {
-
     private $tpl;
     private $options = [];
     private $defaults = [
@@ -29,7 +28,7 @@ class Page
 
         Tpl::configure($config);
 
-        $this->tpl = new Tpl();
+        $this->tpl = new Tpl;
 
         if ($this->options['data']) $this->setData($this->options['data']);
 
@@ -37,33 +36,25 @@ class Page
 
     }
 
-    public function __destruct()
-    {
-
-        if ($this->options['footer'] === true) $this->tpl->draw("footer", false);
-
-    }
-
     private function setData($data = array())
     {
-
         foreach ($data as $key => $val) {
-
             $this->tpl->assign($key, $val);
-
         }
 
     }
 
     public function setTpl($tplname, $data = array(), $returnHTML = false)
     {
-
         $this->setData($data);
 
         return $this->tpl->draw($tplname, $returnHTML);
-
     }
 
+    public function __destruct()
+    {
+        if ($this->options['footer'] === true) $this->tpl->draw("footer");
+    }
 }
 
 ?>
