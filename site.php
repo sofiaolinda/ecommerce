@@ -11,14 +11,14 @@ $app->get('/', function () {
 
     $page = new Page();
     $page->setTpl("index", [
-        "products"=>Product::checkList($products)
+        "products" => Product::checkList($products)
     ]);
 
 });
 
 $app->get("/categories/:idcategory", function ($idcategory) {
 
-    $page = (isset($_GET['page'])) ? (int) $_GET['page'] : 1;
+    $page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
 
     User::verifyLogin();
 
@@ -30,7 +30,7 @@ $app->get("/categories/:idcategory", function ($idcategory) {
 
     $pages = [];
 
-    for ($i = 1; $i <= $pagination['pages']; $i++ ){
+    for ($i = 1; $i <= $pagination['pages']; $i++) {
         $pages[] = [
             "link" => "/categories/" . $category->getidcategory() . "?page=" . $i,
             "page" => $i
@@ -40,12 +40,25 @@ $app->get("/categories/:idcategory", function ($idcategory) {
     $page = new Page();
 
     $page->setTpl("category", [
-        "category"=>$category->getValues(),
-        "product"=>$pagination['data'],
-        "pages"=>$pages
+        "category" => $category->getValues(),
+        "product" => $pagination['data'],
+        "pages" => $pages
     ]);
 });
 
+$app->get("/products/:desurl", function ($desurl) {
 
+    $product = new Product();
+
+    $product->getFromUrl($desurl);
+
+    $page = new Page();
+
+    $page->setTpl("product-detail", [
+        "product" => $product->getValues(),
+        "categories" => $product->getCategories()
+    ]);
+
+});
 
 ?>

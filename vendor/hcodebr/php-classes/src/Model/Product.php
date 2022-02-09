@@ -78,8 +78,7 @@ class Product extends Model
             'img' . DIRECTORY_SEPARATOR .
             'products' . DIRECTORY_SEPARATOR .
             $this->getidproduct() . ".jpg"
-        ))
-        {
+        )) {
             $url = "/res/site/img/products/" . $this->getidproduct() . ".jpg";
         } else {
             $url = "/res/site/img/product.jpg";
@@ -102,11 +101,11 @@ class Product extends Model
         $extension = explode(".", $file['name']);
         $extension = end($extension);
 
-        switch ($extension){
+        switch ($extension) {
             case "jpg":
             case "jpeg":
                 $image = imagecreatefromjpeg($file['tmp_name']);
-            break;
+                break;
             case "gif":
                 $image = imagecreatefromgif($file['tmp_name']);
                 break;
@@ -129,4 +128,27 @@ class Product extends Model
         $this->checkPhoto();
 
     }
+
+    public function getFromUrl($desurl)
+    {
+        $sql = new Sql();
+
+        $rows = $sql->select("SELECT * FROM tb_products WHERE desurl = :desurl LIMIT 1", [
+            ":desurl" => $desurl
+        ]);
+
+        $this->setData($rows[0]);
+    }
+
+    public function getCategories()
+    {
+        $sql = new Sql();
+
+        return $sql->select("
+            SELECT * FROM tb_categories a INNER JOIN tb_productscategories b ON a.idcategory = b.idcategory WHERE b.idproduct = :idproduct", [
+            ":idproduct" => $this->getidproduct()
+        ]);
+
+    }
+
 }
