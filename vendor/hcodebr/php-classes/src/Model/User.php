@@ -19,6 +19,43 @@ class User extends Model
         "iduser", "idperson", "desperson", "deslogin", "desemail", "despassword", "nrphone", "inadmin", "dtergister"
     ];
 
+    public static function getFromSession()
+    {
+        $user = new User();
+
+        if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]["iduser"] > 0) {
+            $user->setData($_SESSION[User::SESSION]);
+        }
+
+        return $user;
+    }
+
+    public static function checkLogin($inadmin = true) : bool
+    {
+        if (
+            !isset($_SESSION[User::SESSION])
+            ||
+            !$_SESSION[User::SESSION]
+            ||
+            !(int)$_SESSION[User::SESSION]["iduser"] > 0
+        ) {
+            return false;
+        }else{
+
+            if($inadmin === true && (bool)$_SESSION[User::SESSION]["inadmin"] === true ){
+
+                return true;
+
+            }elseif ($inadmin === false){
+
+                return true;
+
+            }else{
+                return false;
+            }
+        }
+    }
+
     public static function login($login, $password): User
     {
 
@@ -50,16 +87,7 @@ class User extends Model
 
     public static function verifyLogin($inadmin = true)
     {
-        if (
-            !isset($_SESSION[User::SESSION])
-            ||
-            !$_SESSION[User::SESSION]
-            ||
-            !(int)$_SESSION[User::SESSION]["iduser"] > 0
-            ||
-            (bool)$_SESSION[User::SESSION]["iduser"] !== $inadmin
-
-        ) {
+        if (User::checkLogin($inadmin)) {
             header("Location: /admin/login");
             exit;
 
@@ -86,7 +114,7 @@ class User extends Model
         $results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
             ":desperson" => $this->getdesperson(),
             ":deslogin" => $this->getdeslogin(),
-            ":despassword"=>User::getPasswordHash($this->getdespassword()),
+            ":despassword" => User::getPasswordHash($this->getdespassword()),
             ":desemail" => $this->getdesemail(),
             ":nrphone" => $this->getnrphone(),
             ":inadmin" => $this->getinadmin()
@@ -120,7 +148,7 @@ class User extends Model
             ":iduser" => $this->getiduser(),
             ":desperson" => $this->getdesperson(),
             ":deslogin" => $this->getdeslogin(),
-            ":despassword"=>User::getPasswordHash($this->getdespassword()),
+            ":despassword" => User::getPasswordHash($this->getdespassword()),
             ":desemail" => $this->getdesemail(),
             ":nrphone" => $this->getnrphone(),
             ":inadmin" => $this->getinadmin()
@@ -149,33 +177,27 @@ class User extends Model
 			INNER JOIN tb_users b USING(idperson)
 			WHERE a.desemail = :email;
 		", array(
-            ":email"=>$email
+            ":email" => $email
         ));
 
-        if (count($results) === 0)
-        {
+        if (count($results) === 0) {
 
             throw new \Exception("Não foi possível recuperar a senha.");
 
-        }
-        else
-        {
+        } else {
 
             $data = $results[0];
 
             $results2 = $sql->select("CALL sp_userspasswordsrecoveries_create(:iduser, :desip)", array(
-                ":iduser"=>$data['iduser'],
-                ":desip"=>$_SERVER['REMOTE_ADDR']
+                ":iduser" => $data['iduser'],
+                ":desip" => $_SERVER['REMOTE_ADDR']
             ));
 
-            if (count($results2) === 0)
-            {
+            if (count($results2) === 0) {
 
                 throw new \Exception("Não foi possível recuperar a senha.");
 
-            }
-            else
-            {
+            } else {
 
                 $dataRecovery = $results2[0];
 
@@ -194,8 +216,8 @@ class User extends Model
                 }
 
                 $mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir senha da Hcode Store", "forgot", array(
-                    "name"=>$data['desperson'],
-                    "link"=>$link
+                    "name" => $data['desperson'],
+                    "link" => $link
                 ));
 
                 $mailer->send();
@@ -229,15 +251,12 @@ class User extends Model
 				AND
 				DATE_ADD(a.dtregister, INTERVAL 1 HOUR) >= NOW();
 		", array(
-            ":idrecovery"=>$idrecovery
+            ":idrecovery" => $idrecovery
         ));
 
-        if (count($results) === 0)
-        {
+        if (count($results) === 0) {
             throw new \Exception("Não foi possível recuperar a senha.");
-        }
-        else
-        {
+        } else {
             return $results[0];
 
         }
@@ -249,7 +268,7 @@ class User extends Model
         $sql = new Sql();
 
         $sql->query("UPDATE tb_userspasswordsrecoveries SET dtrecovery = NOW() WHERE idrecovery = :idrecovery", array(
-            ":idrecovery"=>$idrecovery
+            ":idrecovery" => $idrecovery
         ));
     }
 
@@ -257,8 +276,8 @@ class User extends Model
     {
         $sql = new Sql();
         $sql->query("UPDATE tb_users SET despassword = :password WHERE iduser = :iduser", array(
-            ":password"=>$password,
-            ":iduser"=>$this->getiduser()
+            ":password" => $password,
+            ":iduser" => $this->getiduser()
         ));
     }
 }
