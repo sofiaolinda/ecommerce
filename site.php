@@ -18,18 +18,34 @@ $app->get('/', function () {
 
 $app->get("/categories/:idcategory", function ($idcategory) {
 
+    $page = (isset($_GET['page'])) ? (int) $_GET['page'] : 1;
+
     User::verifyLogin();
 
     $category = new Category();
 
     $category->get((int)$idcategory);
 
+    $pagination = $category->getProductsPage($page);
+
+    $pages = [];
+
+    for ($i = 1; $i <= $pagination['pages']; $i++ ){
+        $pages[] = [
+            "link" => "/categories/" . $category->getidcategory() . "?page=" . $i,
+            "page" => $i
+        ];
+    }
+
     $page = new Page();
 
     $page->setTpl("category", [
         "category"=>$category->getValues(),
-        "product"=>Product::checkList($category->getProducts())
+        "product"=>$pagination['data'],
+        "pages"=>$pages
     ]);
 });
+
+
 
 ?>
