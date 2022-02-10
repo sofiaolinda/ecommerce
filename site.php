@@ -142,7 +142,7 @@ $app->post("/cart/freight", function () {
 
 });
 
-$app->get("/checkout", function(){
+$app->get("/checkout", function () {
 
     User::verifyLogin(false);
 
@@ -179,15 +179,15 @@ $app->get("/checkout", function(){
     $page = new Page();
 
     $page->setTpl("checkout", [
-        'cart'=>$cart->getValues(),
-        'address'=>$address->getValues(),
-        'products'=>$cart->getProducts(),
-        'error'=>Address::getMsgError()
+        'cart' => $cart->getValues(),
+        'address' => $address->getValues(),
+        'products' => $cart->getProducts(),
+        'error' => Address::getMsgError()
     ]);
 
 });
 
-$app->post("/checkout", function(){
+$app->post("/checkout", function () {
 
     User::verifyLogin(false);
 
@@ -245,11 +245,11 @@ $app->post("/checkout", function(){
     $order = new Order();
 
     $order->setData([
-        'idcart'=>$cart->getidcart(),
-        'idaddress'=>$address->getidaddress(),
-        'iduser'=>$user->getiduser(),
-        'idstatus'=>OrderStatus::EM_ABERTO,
-        'vltotal'=>$cart->getvltotal()
+        'idcart' => $cart->getidcart(),
+        'idaddress' => $address->getidaddress(),
+        'iduser' => $user->getiduser(),
+        'idstatus' => OrderStatus::EM_ABERTO,
+        'vltotal' => $cart->getvltotal()
     ]);
 
     $order->save();
@@ -273,7 +273,7 @@ $app->post("/checkout", function(){
 
 });
 
-$app->get("/order/:idorder", function($idorder){
+$app->get("/order/:idorder", function ($idorder) {
 
     User::verifyLogin(false);
 
@@ -284,12 +284,12 @@ $app->get("/order/:idorder", function($idorder){
     $page = new Page();
 
     $page->setTpl("payment", [
-        'order'=>$order->getValues()
+        'order' => $order->getValues()
     ]);
 
 });
 
-$app->get("/boleto/:idorder", function($idorder){
+$app->get("/boleto/:idorder", function ($idorder) {
 
     User::verifyLogin(false);
 
@@ -304,15 +304,15 @@ $app->get("/boleto/:idorder", function($idorder){
 
     $valor_cobrado = formatPrice($order->getvltotal()); // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
     $valor_cobrado = str_replace(".", "", $valor_cobrado);
-    $valor_cobrado = str_replace(",", ".",$valor_cobrado);
-    $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
+    $valor_cobrado = str_replace(",", ".", $valor_cobrado);
+    $valor_boleto = number_format($valor_cobrado + $taxa_boleto, 2, ',', '');
 
     $dadosboleto["nosso_numero"] = $order->getidorder();  // Nosso numero - REGRA: Máximo de 8 caracteres!
-    $dadosboleto["numero_documento"] = $order->getidorder();	// Num do pedido ou nosso numero
+    $dadosboleto["numero_documento"] = $order->getidorder();    // Num do pedido ou nosso numero
     $dadosboleto["data_vencimento"] = $data_venc; // Data de Vencimento do Boleto - REGRA: Formato DD/MM/AAAA
     $dadosboleto["data_documento"] = date("d/m/Y"); // Data de emissão do Boleto
     $dadosboleto["data_processamento"] = date("d/m/Y"); // Data de processamento do boleto (opcional)
-    $dadosboleto["valor_boleto"] = $valor_boleto; 	// Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
+    $dadosboleto["valor_boleto"] = $valor_boleto;    // Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
 
     // DADOS DO SEU CLIENTE
     $dadosboleto["sacado"] = $order->getdesperson();
@@ -341,8 +341,8 @@ $app->get("/boleto/:idorder", function($idorder){
 
     // DADOS DA SUA CONTA - ITAÚ
     $dadosboleto["agencia"] = "1690"; // Num da agencia, sem digito
-    $dadosboleto["conta"] = "48781";	// Num da conta, sem digito
-    $dadosboleto["conta_dv"] = "2"; 	// Digito do Num da conta
+    $dadosboleto["conta"] = "48781";    // Num da conta, sem digito
+    $dadosboleto["conta_dv"] = "2";    // Digito do Num da conta
 
     // DADOS PERSONALIZADOS - ITAÚ
     $dadosboleto["carteira"] = "175";  // Código da Carteira: pode ser 175, 174, 104, 109, 178, ou 157
@@ -362,25 +362,25 @@ $app->get("/boleto/:idorder", function($idorder){
 
 });
 
-$app->get("/login", function(){
+$app->get("/login", function () {
 
     $page = new Page();
 
     $page->setTpl("login", [
-        'error'=>User::getError(),
-        'errorRegister'=>User::getErrorRegister(),
-        'registerValues'=>(isset($_SESSION['registerValues'])) ? $_SESSION['registerValues'] : ['name'=>'', 'email'=>'', 'phone'=>'']
+        'error' => User::getError(),
+        'errorRegister' => User::getErrorRegister(),
+        'registerValues' => (isset($_SESSION['registerValues'])) ? $_SESSION['registerValues'] : ['name' => '', 'email' => '', 'phone' => '']
     ]);
 
 });
 
-$app->post("/login", function(){
+$app->post("/login", function () {
 
     try {
 
         User::login($_POST['login'], $_POST['password']);
 
-    } catch(Exception $e) {
+    } catch (Exception $e) {
 
         User::setError($e->getMessage());
 
@@ -391,7 +391,7 @@ $app->post("/login", function(){
 
 });
 
-$app->get("/logout", function(){
+$app->get("/logout", function () {
 
     User::logout();
 
@@ -400,7 +400,7 @@ $app->get("/logout", function(){
 
 });
 
-$app->post("/register", function(){
+$app->post("/register", function () {
 
     $_SESSION['registerValues'] = $_POST;
 
@@ -439,12 +439,12 @@ $app->post("/register", function(){
     $user = new User();
 
     $user->setData([
-        'inadmin'=>0,
-        'deslogin'=>$_POST['email'],
-        'desperson'=>$_POST['name'],
-        'desemail'=>$_POST['email'],
-        'despassword'=>$_POST['password'],
-        'nrphone'=>$_POST['phone']
+        'inadmin' => 0,
+        'deslogin' => $_POST['email'],
+        'desperson' => $_POST['name'],
+        'desemail' => $_POST['email'],
+        'despassword' => $_POST['password'],
+        'nrphone' => $_POST['phone']
     ]);
 
     $user->save();
@@ -456,7 +456,7 @@ $app->post("/register", function(){
 
 });
 
-$app->get("/forgot", function() {
+$app->get("/forgot", function () {
 
     $page = new Page();
 
@@ -464,7 +464,7 @@ $app->get("/forgot", function() {
 
 });
 
-$app->post("/forgot", function(){
+$app->post("/forgot", function () {
 
     $user = User::getForgot($_POST["email"], false);
 
@@ -473,7 +473,7 @@ $app->post("/forgot", function(){
 
 });
 
-$app->get("/forgot/sent", function(){
+$app->get("/forgot/sent", function () {
 
     $page = new Page();
 
@@ -482,20 +482,20 @@ $app->get("/forgot/sent", function(){
 });
 
 
-$app->get("/forgot/reset", function(){
+$app->get("/forgot/reset", function () {
 
     $user = User::validForgotDecrypt($_GET["code"]);
 
     $page = new Page();
 
     $page->setTpl("forgot-reset", array(
-        "name"=>$user["desperson"],
-        "code"=>$_GET["code"]
+        "name" => $user["desperson"],
+        "code" => $_GET["code"]
     ));
 
 });
 
-$app->post("/forgot/reset", function(){
+$app->post("/forgot/reset", function () {
 
     $forgot = User::validForgotDecrypt($_POST["code"]);
 
@@ -515,7 +515,7 @@ $app->post("/forgot/reset", function(){
 
 });
 
-$app->get("/profile", function(){
+$app->get("/profile", function () {
 
     User::verifyLogin(false);
 
@@ -524,14 +524,14 @@ $app->get("/profile", function(){
     $page = new Page();
 
     $page->setTpl("profile", [
-        'user'=>$user->getValues(),
-        'profileMsg'=>User::getSuccess(),
-        'profileError'=>User::getError()
+        'user' => $user->getValues(),
+        'profileMsg' => User::getSuccess(),
+        'profileError' => User::getError()
     ]);
 
 });
 
-$app->post("/profile", function(){
+$app->post("/profile", function () {
 
     User::verifyLogin(false);
 
@@ -576,7 +576,7 @@ $app->post("/profile", function(){
 
 });
 
-$app->get("/profile/orders", function(){
+$app->get("/profile/orders", function () {
 
     User::verifyLogin(false);
 
@@ -585,12 +585,12 @@ $app->get("/profile/orders", function(){
     $page = new Page();
 
     $page->setTpl("profile-orders", [
-        'orders'=>$user->getOrders()
+        'orders' => $user->getOrders()
     ]);
 
 });
 
-$app->get("/profile/orders/:idorder", function($idorder){
+$app->get("/profile/orders/:idorder", function ($idorder) {
 
     User::verifyLogin(false);
 
@@ -607,27 +607,27 @@ $app->get("/profile/orders/:idorder", function($idorder){
     $page = new Page();
 
     $page->setTpl("profile-orders-detail", [
-        'order'=>$order->getValues(),
-        'cart'=>$cart->getValues(),
-        'products'=>$cart->getProducts()
+        'order' => $order->getValues(),
+        'cart' => $cart->getValues(),
+        'products' => $cart->getProducts()
     ]);
 
 });
 
-$app->get("/profile/change-password", function(){
+$app->get("/profile/change-password", function () {
 
     User::verifyLogin(false);
 
     $page = new Page();
 
     $page->setTpl("profile-change-password", [
-        'changePassError'=>User::getError(),
-        'changePassSuccess'=>User::getSuccess()
+        'changePassError' => User::getError(),
+        'changePassSuccess' => User::getSuccess()
     ]);
 
 });
 
-$app->post("/profile/change-password", function(){
+$app->post("/profile/change-password", function () {
 
     User::verifyLogin(false);
 
