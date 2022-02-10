@@ -1,4 +1,6 @@
-<?php if(!class_exists('Rain\Tpl')){exit;}?><div class="product-big-title-area">
+<?php if(!class_exists('Rain\Tpl')){exit;}?>
+
+<div class="product-big-title-area">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -28,35 +30,23 @@
 									</div>
 									<?php } ?>
 
-
 									<div class="woocommerce-billing-fields">
 										<h3>Endereço de entrega</h3>
-										<p id="billing_cep_1_field" class="form-row form-row-wide address-field validate-required">
-											<label class="" for="billing_cep_1">Cep <abbr title="required" class="required">*</abbr>
+										<p id="billing_zipcode_1_field" class="form-row form-row-wide address-field validate-required">
+											<label class="" for="billing_address_1">Cep <abbr title="required" class="required">*</abbr>
 											</label>
-											<input type="text" value="<?php echo htmlspecialchars( $cart["deszipcode"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="00000-000" id="billing_cep_1" name="zipcode" class="input-text ">
-											<input type="submit" value="Atualizar CEP" id="place_order" class="button alt" formaction="/checkout" formmethod="get">
+                                            <input type="text" value="<?php echo htmlspecialchars( $cart["deszipcode"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="00000-000" id="billing_zipcode_1" name="zipcode" class="input-text ">
+                                            <input type="submit" value="Atualizar CEP" id="place_order" class="button alt" formaction="/checkout" formmethod="get">
 										</p>
-										<div class="row">
-											<div class="col-sm-9">
-												<p id="billing_address_1_field" class="form-row form-row-wide address-field validate-required">
-													<label class="" for="billing_address_1">Endereço <abbr title="required" class="required">*</abbr>
-													</label>
-													<input type="text" value="<?php echo htmlspecialchars( $address["desaddress"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Logradouro, número e bairro" id="billing_address_1" name="desaddress" class="input-text ">
-												</p>
-											</div>
-											<div class="col-sm-3">
-												<p id="billing_number_1_field" class="form-row form-row-wide number-field validate-required">
-													<label class="" for="billing_number_1">Número <abbr title="required" class="required">*</abbr>
-													</label>
-													<input type="text" value="<?php echo htmlspecialchars( $address["desnumber"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Número" id="billing_number_1" name="desnumber" class="input-text ">
-												</p>
-											</div>
-										</div>
+										<p id="billing_address_1_field" class="form-row form-row-wide address-field validate-required">
+											<label class="" for="billing_address_1">Endereço <abbr title="required" class="required">*</abbr>
+											</label>
+											<input type="text" value="<?php echo htmlspecialchars( $address["desaddress"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Logradouro, número e bairro" id="billing_address_1" name="desaddress" class="input-text ">
+										</p>
 										<p id="billing_address_2_field" class="form-row form-row-wide address-field">
 											<input type="text" value="<?php echo htmlspecialchars( $address["descomplement"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Complemento (opcional)" id="billing_address_2" name="descomplement" class="input-text ">
-										</p>
-										<p id="billing_district_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row-wide address-field validate-required">
+                                        </p>
+                                        <p id="billing_district_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row-wide address-field validate-required">
 											<label class="" for="billing_district">Bairro <abbr title="required" class="required">*</abbr>
 											</label>
 											<input type="text" value="<?php echo htmlspecialchars( $address["desdistrict"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Cidade" id="billing_district" name="desdistrict" class="input-text ">
@@ -70,9 +60,9 @@
 											<label class="" for="billing_state">Estado</label>
 											<input type="text" id="billing_state" name="desstate" placeholder="Estado" value="<?php echo htmlspecialchars( $address["desstate"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="input-text ">
 										</p>
-										<p id="billing_country_field" class="form-row form-row-first address-field validate-state" data-o_class="form-row form-row-first address-field validate-state">
+										<p id="billing_state_field" class="form-row form-row-first address-field validate-state" data-o_class="form-row form-row-first address-field validate-state">
 											<label class="" for="billing_state">País</label>
-											<input type="text" id="billing_country" name="descountry" placeholder="País" value="<?php echo htmlspecialchars( $address["descountry"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="input-text ">
+											<input type="text" id="billing_state" name="descountry" placeholder="País" value="<?php echo htmlspecialchars( $address["descountry"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" class="input-text ">
 										</p>
 										<div class="clear"></div>
 										<h3 id="order_review_heading" style="margin-top:30px;">Detalhes do Pedido</h3>
@@ -118,14 +108,6 @@
 												</tr>
 												</tfoot>
 											</table>
-											<p id="method-pagseguro_field" class="form-row form-row-first address-field validate-state" data-o_class="form-row form-row-first address-field validate-state">
-												<input type="radio" id="method-pagseguro" name="payment-method" placeholder="País" value="1" style="float:left; margin: 30px;">
-												<label class="" for="method-pagseguro"><img style="height:64px;" src="/res/site/img/logo-pagseguro.png"></label>
-											</p>
-											<p id="method-paypal_field" class="form-row form-row-first address-field validate-state" data-o_class="form-row form-row-first address-field validate-state">
-												<input type="radio" checked="checked" id="method-paypal" name="payment-method" placeholder="País" value="2" style="float:left; margin: 30px;">
-												<label class="" for="method-paypal"><img style="height:64px;" src="/res/site/img/logo-paypal.png"></label>
-											</p>
 											<div id="payment">
 												<div class="form-row place-order">
 													<input type="submit" data-value="Place order" value="Continuar" id="place_order" name="woocommerce_checkout_place_order" class="button alt">
