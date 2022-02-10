@@ -15,9 +15,9 @@ class User extends Model
     const ERROR_REGISTER = "UserErrorRegister";
     const SUCCESS = "UserSucesss";
 
-    protected $fields = [
-        "iduser", "idperson", "desperson", "deslogin", "desemail", "despassword", "nrphone", "inadmin", "dtergister"
-    ];
+//    protected $fields = [
+//        "iduser", "idperson", "desperson", "deslogin", "desemail", "despassword", "nrphone", "inadmin", "dtergister"
+//    ];
 
     public static function getFromSession()
     {
@@ -64,28 +64,34 @@ class User extends Model
     public static function login($login, $password): User
     {
 
-        $sql = new sql();
+        $sql = new Sql();
 
-        $results = $sql->select("SELECT * from tb_users where deslogin = :LOGIN", array(
-            ":LOGIN" => $login
+        $results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.deslogin = :LOGIN", array(
+            ":LOGIN"=>$login
         ));
 
-        if (count($results) === 0) {
-            throw new \Exception("Ususário não encontrado ou senha inválida");
+        if (count($results) === 0)
+        {
+            throw new \Exception("Usuário inexistente ou senha inválida.");
         }
 
         $data = $results[0];
 
-        if (password_verify($password, $data["despassword"]) === true) {
+        if (password_verify($password, $data["despassword"]) === true)
+        {
+
             $user = new User();
+
+            $data['desperson'] = utf8_encode($data['desperson']);
 
             $user->setData($data);
 
             $_SESSION[User::SESSION] = $user->getValues();
 
             return $user;
+
         } else {
-            throw new \Exception("Ususário não encontrado ou senha inválida");
+            throw new \Exception("Usuário inexistente ou senha inválida.");
         }
 
     }
