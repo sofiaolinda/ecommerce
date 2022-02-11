@@ -1,5 +1,4 @@
-<?php if(!class_exists('Rain\Tpl')){exit;}?>
-<div class="product-big-title-area">
+<?php if(!class_exists('Rain\Tpl')){exit;}?><div class="product-big-title-area">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -53,8 +52,8 @@
 										</div>
 										<p id="billing_address_2_field" class="form-row form-row-wide address-field">
 											<input type="text" value="<?php echo htmlspecialchars( $address["descomplement"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Complemento (opcional)" id="billing_address_2" name="descomplement" class="input-text ">
-                                        </p>
-                                        <p id="billing_district_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row-wide address-field validate-required">
+										</p>
+										<p id="billing_district_field" class="form-row form-row-wide address-field validate-required" data-o_class="form-row form-row-wide address-field validate-required">
 											<label class="" for="billing_district">Bairro <abbr title="required" class="required">*</abbr>
 											</label>
 											<input type="text" value="<?php echo htmlspecialchars( $address["desdistrict"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" placeholder="Cidade" id="billing_district" name="desdistrict" class="input-text ">
@@ -77,42 +76,50 @@
 										<div id="order_review" style="position: relative;">
 											<table class="shop_table">
 												<thead>
-													<tr>
-														<th class="product-name">Produto</th>
-														<th class="product-total">Total</th>
-													</tr>
+												<tr>
+													<th class="product-name">Produto</th>
+													<th class="product-total">Total</th>
+												</tr>
 												</thead>
 												<tbody>
-                                                    <?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
-													<tr class="cart_item">
-														<td class="product-name">
-															<?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?> <strong class="product-quantity">× <?php echo htmlspecialchars( $value1["nrqtd"], ENT_COMPAT, 'UTF-8', FALSE ); ?></strong> 
-														</td>
-														<td class="product-total">
-															<span class="amount">R$<?php echo formatPrice($value1["vltotal"]); ?></span>
-														</td>
-                                                    </tr>
-                                                    <?php } ?>
+												<?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
+												<tr class="cart_item">
+													<td class="product-name">
+														<?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?> <strong class="product-quantity">× <?php echo htmlspecialchars( $value1["nrqtd"], ENT_COMPAT, 'UTF-8', FALSE ); ?></strong>
+													</td>
+													<td class="product-total">
+														<span class="amount">R$<?php echo formatPrice($value1["vltotal"]); ?></span>
+													</td>
+												</tr>
+												<?php } ?>
 												</tbody>
 												<tfoot>
-													<tr class="cart-subtotal">
-														<th>Subtotal</th>
-														<td><span class="amount">R$<?php echo formatPrice($cart["vlsubtotal"]); ?></span>
-														</td>
-													</tr>
-													<tr class="shipping">
-														<th>Frete</th>
-														<td>
-															R$<?php echo formatPrice($cart["vlfreight"]); ?>
-															<input type="hidden" class="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]">
-														</td>
-													</tr>
-													<tr class="order-total">
-														<th>Total do Pedido</th>
-														<td><strong><span class="amount">R$<?php echo formatPrice($cart["vltotal"]); ?></span></strong> </td>
-													</tr>
+												<tr class="cart-subtotal">
+													<th>Subtotal</th>
+													<td><span class="amount">R$<?php echo formatPrice($cart["vlsubtotal"]); ?></span>
+													</td>
+												</tr>
+												<tr class="shipping">
+													<th>Frete</th>
+													<td>
+														R$<?php echo formatPrice($cart["vlfreight"]); ?>
+														<input type="hidden" class="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]">
+													</td>
+												</tr>
+												<tr class="order-total">
+													<th>Total do Pedido</th>
+													<td><strong><span class="amount">R$<?php echo formatPrice($cart["vltotal"]); ?></span></strong> </td>
+												</tr>
 												</tfoot>
 											</table>
+											<p id="billing_state_field" class="form-row form-row-first address-field validate-state" data-o_class="form-row form-row-first address-field validate-state">
+												<input type="radio" id="method-pagseguro" name="payment-method" placeholder="País" value="1" style="float:left; margin: 30px;">
+												<label class="" for="method-pagseguro"><img style="height:64px;" src="/res/site/img/logo-pagseguro.png"></label>
+											</p>
+											<p id="billing_state_field" class="form-row form-row-first address-field validate-state" data-o_class="form-row form-row-first address-field validate-state">
+												<input type="radio" checked="checked" id="method-paypal" name="payment-method" placeholder="País" value="2" style="float:left; margin: 30px;">
+												<label class="" for="method-paypal"><img style="height:64px;" src="/res/site/img/logo-paypal.png"></label>
+											</p>
 											<div id="payment">
 												<div class="form-row place-order">
 													<input type="submit" data-value="Place order" value="Continuar" id="place_order" name="woocommerce_checkout_place_order" class="button alt">
